@@ -1,9 +1,0 @@
-{
-  "extends": [
-    "wesbos"
-  ],
-  "rules": {
-    "react/static-property-placement": "off",
-    "react/state-in-constructor": "off"
-  }
-}
