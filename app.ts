@@ -1,3 +1,4 @@
+import "dotenv/config";
 import createError from "http-errors";
 import express from "express";
 import path from "path";
@@ -8,6 +9,14 @@ import indexRouter from "./routes/index";
 import usersRouter from "./routes/users";
 import messagesRouter from "./routes/messages";
 
+import verifySlackRequest from "middlewares/verifySlackRequest";
+
+declare module "http" {
+  interface IncomingMessage {
+    rawBody?: string;
+  }
+}
+
 const app = express();
 
 // view engine setup
@@ -16,13 +25,20 @@ app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(
+  express.urlencoded({
+    extended: false,
+    verify: (req, _res, buf, encoding: BufferEncoding) => {
+      req.rawBody = buf.toString(encoding || "utf8");
+    },
+  })
+);
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-app.use("/messages", messagesRouter);
+app.use("/messages", verifySlackRequest, messagesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

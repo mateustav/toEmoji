@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "start": "node dist/bin/www.js",
-    "dev": "ts-node ./bin/www.ts"
+    "start": "op run --env-file=\"./.env.development\" -- node dist/bin/www.js",
+    "dev": "op run --env-file=\"./.env.development\" -- nodemon --exec ts-node -r tsconfig-paths/register ./bin/www.ts"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "emojilib": "^4.0.2",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
@@ -21,7 +22,9 @@
     "@types/express": "^5.0.3",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.6.2",
+    "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3"
   }
 }
