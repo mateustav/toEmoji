@@ -9,6 +9,11 @@
     "files": true
   },
   "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "middlewares/*": ["middlewares/*"],
+      "services/*": ["services/*"]
+    },
     // File Layout
     "rootDir": "./",
     "outDir": "./dist",

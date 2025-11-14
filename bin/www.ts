@@ -16,7 +16,7 @@ const cert = fs.readFileSync("./cert.pem");
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || "3001");
+const port = normalizePort(process.env.PORT || "3001");
 app.set("port", port);
 
 /**
@@ -38,7 +38,7 @@ server.on("listening", onListening);
  */
 
 function normalizePort(val: string) {
-  var port = parseInt(val, 10);
+  const port = parseInt(val, 10);
 
   if (isNaN(port)) {
     // named pipe
