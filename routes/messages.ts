@@ -3,7 +3,7 @@ import express from "express";
 import { transformMessage } from "services/transform";
 const router = express.Router();
 
-router.post("/", ({ headers, body }, res) => {
+router.post("/", ({ body }, res) => {
   const { text } = body;
 
   if (!text) {
@@ -15,7 +15,7 @@ router.post("/", ({ headers, body }, res) => {
   const transformedText = transformMessage(text);
 
   const responseUrl = body.response_url;
-  if (responseUrl && headers["x-slack-request-timestamp"]) {
+  if (responseUrl) {
     fetch(responseUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
