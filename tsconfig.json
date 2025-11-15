@@ -11,6 +11,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "db/*": ["db/*"],
       "middlewares/*": ["middlewares/*"],
       "services/*": ["services/*"]
     },
