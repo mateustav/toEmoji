@@ -9,8 +9,7 @@ async function getAccessResponse(code: string): Promise<OauthV2AccessResponse> {
   const basicAuth = Buffer.from(
     `${process.env.SLACK_CLIENT_ID}:${process.env.SLACK_SECRET}`
   ).toString("base64");
-  const params = new URLSearchParams();
-  params.append("code", code);
+  const params = new URLSearchParams({ code });
 
   const response = await fetch("https://slack.com/api/oauth.v2.access", {
     headers: {
@@ -26,20 +25,27 @@ async function getAccessResponse(code: string): Promise<OauthV2AccessResponse> {
     throw new Error(`Slack OAuth failed: ${data.error}`);
   }
 
-  if (!data.authed_user?.access_token || !data.access_token) {
+  if (!data.access_token) {
     throw new Error("Missing access tokens in Slack response");
   }
 
   return data;
 }
 
-async function saveWorkspaceData(teamId: string, teamName: string) {
+async function saveWorkspaceData(
+  teamId: string,
+  teamName: string,
+  encryptedBotToken: string
+) {
   const dbPool = await pool();
   const client = await dbPool.connect();
   try {
-    await client.query(
-      `INSERT INTO workspaces (name, external_id) VALUES ($1, $2) ON CONFLICT (external_id) DO NOTHING`,
-      [teamName, teamId]
+    const result = await client.query(
+      `INSERT INTO workspaces (name, external_id, bot_access_token_encrypted) VALUES ($1, $2, $3)
+      ON CONFLICT (external_id)
+      DO UPDATE SET name = COALESCE(EXCLUDED.name, workspaces.name)
+      `,
+      [teamName, teamId, encryptedBotToken]
     );
   } finally {
     client.release();
@@ -55,7 +61,12 @@ router.get("/", async (req, res) => {
 
   try {
     const data = await getAccessResponse(code);
-    await saveWorkspaceData(data.team!.id!, data.team!.name!);
+    const encryptedBotToken = encrypt(data.access_token!);
+    await saveWorkspaceData(
+      data.team!.id!,
+      data.team!.name!,
+      JSON.stringify(encryptedBotToken)
+    );
   } catch (error) {
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
