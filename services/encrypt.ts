@@ -1,5 +1,11 @@
 import crypto from "crypto";
 
+interface EncryptedData {
+  iv: string;
+  content: string;
+  tag: string;
+}
+
 const algorithm = "aes-256-gcm";
 if (!process.env.ENCRYPTION_KEY) {
   throw new Error("ENCRYPTION_KEY environment variable is not set");
@@ -7,7 +13,7 @@ if (!process.env.ENCRYPTION_KEY) {
 
 const key = Buffer.from(process.env.ENCRYPTION_KEY, "base64");
 
-function encrypt(text: string): { iv: string; content: string; tag: string } {
+function encrypt(text: string): EncryptedData {
   const iv = crypto.randomBytes(12).toString("base64");
   const cipher = crypto.createCipheriv(
     algorithm,
