@@ -1,39 +1,36 @@
 {
   "name": "emojiq",
-  "version": "1.0.0",
-  "description": "Turn your Slack messages into emojis when possible.",
-  "main": "src/server.js",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon start",
-    "build-react-client": "cd client && npm install && npm run build"
+    "build": "tsc",
+    "start": "op run --env-file=\"./.env.development\" -- node dist/bin/www.js",
+    "dev": "op run --env-file=\"./.env.development\" -- nodemon --exec ts-node -r tsconfig-paths/register ./bin/www.ts",
+    "migrate": "op run --env-file=\"./.env.development\" -- knex --knexfile ./knexfile.ts migrate:latest"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "dotenv": "^8.2.0",
-    "emoji-unicode": "^2.0.1",
-    "emojilib": "^2.4.0",
-    "express": "^4.17.1",
-    "node-fetch": "^2.6.0",
-    "pg": "^8.5.1",
-    "string-tokenizer": "0.0.8",
-    "utf8": "^3.0.0"
+    "@slack/web-api": "^7.12.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "emoji-regex": "^10.6.0",
+    "emojilib": "^4.0.2",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jade": "~1.11.0",
+    "knex": "^3.1.0",
+    "morgan": "~1.9.1",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7.16.0",
-    "eslint-config-airbnb": "^18.2.1",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-config-wesbos": "^1.0.1",
-    "eslint-plugin-html": "^6.1.1",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-prettier": "^3.3.0",
-    "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "nodemon": "^2.0.4",
-    "prettier": "^2.2.1"
+    "@types/cookie-parser": "^1.4.9",
+    "@types/debug": "^4.1.12",
+    "@types/express": "^5.0.3",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.6.2",
+    "@types/pg": "^8.15.6",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.3"
   }
 }
