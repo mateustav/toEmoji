@@ -14,7 +14,7 @@
     "debug": "~2.6.9",
     "emoji-regex": "^10.6.0",
     "emojilib": "^4.0.2",
-    "express": "~4.16.1",
+    "express": "~4.22.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "knex": "^3.1.0",
