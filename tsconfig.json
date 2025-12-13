@@ -12,6 +12,7 @@
     "baseUrl": "./",
     "paths": {
       "db/*": ["db/*"],
+      "migrations/*": ["migrations/*"],
       "middlewares/*": ["middlewares/*"],
       "services/*": ["services/*"]
     },
