@@ -1,8 +1,9 @@
 import express from "express";
 import pool from "db";
 import { decrypt } from "services/encrypt";
-
 import { transformMessage } from "services/transform";
+
+import type { EmojiListResponse } from "@slack/web-api";
 const router = express.Router();
 
 async function fetchEmojisFromDB(teamId: string) {
@@ -28,25 +29,17 @@ async function fetchEmojisFromDB(teamId: string) {
       },
       body: new URLSearchParams({ token }).toString(),
     });
-    const emojisArray: any = await slackEmojis.json();
-    if (emojisArray.ok) {
+
+    const emojisArray = (await slackEmojis.json()) as EmojiListResponse;
+    if (emojisArray.ok && emojisArray.emoji) {
       const emojis = Object.keys(emojisArray.emoji);
       await client.query(
         `UPDATE workspaces SET emojis = $1 WHERE external_id = $2`,
         [emojis, teamId]
       );
       return emojis;
-    }
-    const data: any = await slackEmojis.json();
-    if (data.ok) {
-      const emojis = Object.keys(data.emoji);
-      await client.query(
-        `UPDATE workspaces SET emojis = $1 WHERE external_id = $2`,
-        [emojis, teamId]
-      );
-      return emojis;
     } else {
-      console.error("Error fetching emojis from Slack:", data.error);
+      console.error("Error fetching emojis from Slack:", emojisArray.error);
       return [];
     }
   } finally {
